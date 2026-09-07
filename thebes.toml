@@ -1,0 +1,36 @@
+[project]
+name = "mercature-notes"
+default_network = "wan"
+chain_id = 2026
+
+[networks.wan]
+validators = [
+    "https://memphis.mercaturaforum.com/deploy-api/v0",
+    "https://memphis.mercaturaforum.com/deploy-api/v1",
+    "https://memphis.mercaturaforum.com/deploy-api/v2",
+    "https://memphis.mercaturaforum.com/deploy-api/v3",
+]
+boundary = "https://memphis.mercaturaforum.com"
+routing  = "smart"
+
+[canisters.notes]
+type   = "backend-motoko"
+cid    = "auto"
+source = "backend/main.mo"
+wasm   = "build/notes.wasm"
+# Explicit build, not composed: as of this thebes-deploy version, the
+# auto-composed build computes --package paths relative to the source
+# file's directory (backend/) but runs moc from the project root, so it
+# looks for "../.mops/..." instead of "./.mops/..." and fails with M0012.
+# `mops sources` always emits --package paths correct for the directory
+# it's run from, so building explicitly from the project root sidesteps
+# the bug. $HOME/.thebes/toolchain/moc is the pinned compiler (deliberately
+# not on PATH), which is what satisfies core@2.5.0's >=1.6.0 requirement.
+build  = "mops install && mkdir -p build && $HOME/.thebes/toolchain/moc --legacy-persistence $(mops sources) -o build/notes.wasm backend/main.mo"
+
+[canisters.web]
+type   = "frontend"
+cid    = "auto"
+wasm   = "asset_canister.wasm"
+bundle = "frontend/dist"
+health_check_url = "/index.html"

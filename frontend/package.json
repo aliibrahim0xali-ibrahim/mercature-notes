@@ -1,0 +1,24 @@
+{
+  "name": "mercature-notes-frontend",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "sync-sdk": "mkdir -p public && cp node_modules/@thebes/sdk/runtime/boundary.js node_modules/@thebes/sdk/runtime/passkey.js public/",
+    "dev": "npm run sync-sdk && vite",
+    "build": "npm run sync-sdk && tsc -b && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@thebes/sdk": "github:Mercatura-Forum/thebes-sdk#9337c0c4c3c42808cd6acc082c594b76fdef2d73",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "typescript": "^5.5.3",
+    "vite": "^5.4.0"
+  }
+}
