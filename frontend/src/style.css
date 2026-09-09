@@ -323,6 +323,38 @@ header.topbar {
 }
 .tip-input:focus { border-color: var(--focus); }
 
+/* ── send (batch tip to picked recipients) ─────────────────────────── */
+.send-panel { display: flex; flex-direction: column; gap: 14px; }
+
+.send-amount-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.send-amount-row .tip-input { width: 96px; }
+
+.recipient-list {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--rule-soft);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.recipient-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--rule-soft);
+  cursor: pointer;
+}
+.recipient-row:last-child { border-bottom: none; }
+.recipient-row:hover { background: var(--card); }
+.recipient-row input[type="checkbox"] { accent-color: var(--wax); width: 15px; height: 15px; flex-shrink: 0; }
+.recipient-row .byline { margin-top: 0; flex-shrink: 0; }
+.recipient-row .note-title { font-size: 13.5px; font-weight: 500; }
+
 /* ── empty states ───────────────────────────────────────────────────── */
 .empty {
   color: var(--ink-soft);

@@ -1,5 +1,14 @@
 # mercature-notes — Task 3: share & tip
 
+![deploy proof](./deploy.png)
+
+## Live demo
+
+- **App:** https://memphis.mercaturaforum.com/_/raw/214569885401572/index.html
+- **Frontend canister (`web`):** `214569885401572`
+- **Backend canister (`notes`):** `28438571719272`
+- Deployed with `thebes-deploy deploy` on Memphis (`memphis.mercaturaforum.com`) — see the terminal screenshot above (`deploy.png`: `✓ deploy complete`, `HTTP 200`, both cids written back to the manifest).
+
 ## What's new
 - `shareNote` / `unshareNote` — toggle a note's `shared` flag (owner-only).
 - `feed` — a plain `query` (no session needed) returning every shared note with its author.
@@ -9,15 +18,19 @@
   - Rule 2 — `note.owner == caller` → rejected
 - Every principal is lazily granted 100 points **once**, the first time it's seen
   (in `createNote` or the first tip either direction) — never re-granted after that.
-- **Bonus — `ledgerSeal`**: total points in circulation must always equal
-  `100 × accounts`, since tipping only moves points between balances, never
-  creates or destroys them. Rendered in the page footer as a small trust check.
-- **Bonus — image attachment**: `Note.imagePath` is a stub field only. Wiring
-  it up for real means integrating thebes-lib's `Media` module (chunked
-  upload, quotas, the certified media tree) — that's a meaningfully bigger
-  piece of work than the rest of this task, so it's left as a TODO rather
-  than a half-verified guess. Read the `Media` module's header comment in
-  thebes-lib before building it.
+- **Bonus — `ledgerSealView`** (named and shaped after Session 6's slide exactly:
+  `{ members; circulation; expected; consistent }`): total points in
+  circulation must always equal `100 × members`, since tipping only moves
+  points between balances, never creates or destroys them. Rendered in the
+  page footer as a small trust check.
+- **Bonus — image attachment: not implemented.** `Note` has no `imagePath`
+  field at all (not even a stub) — the frontend SDK's Candid decoder can't
+  decode `opt`/optional fields, so any record carrying one can't be read
+  back client-side. Wiring this up for real means giving media its own
+  contract call via thebes-lib's `Media` module (chunked upload, quotas, the
+  certified media tree), not a field on `Note` — that's a meaningfully
+  bigger piece of work than the rest of this task, so it's left as a TODO.
+  Read the `Media` module's header comment in thebes-lib before building it.
 
 ## Untouched, on purpose
 The Memphis gate line is byte-for-byte identical to Task 2:

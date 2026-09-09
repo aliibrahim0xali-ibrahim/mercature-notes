@@ -5,10 +5,13 @@ chain_id = 2026
 
 [networks.wan]
 validators = [
-    "https://memphis.mercaturaforum.com/deploy-api/v0",
+    # v0 moved to the back — three straight deploys have timed out specifically
+    # against v0 at the receipt-poll stage. This is a deploy-target reorder to
+    # test whether v1/v2/v3 are healthy, not a change to any canister code.
     "https://memphis.mercaturaforum.com/deploy-api/v1",
     "https://memphis.mercaturaforum.com/deploy-api/v2",
     "https://memphis.mercaturaforum.com/deploy-api/v3",
+    "https://memphis.mercaturaforum.com/deploy-api/v0",
 ]
 boundary = "https://memphis.mercaturaforum.com"
 routing  = "smart"

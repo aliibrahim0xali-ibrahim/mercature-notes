@@ -138,8 +138,12 @@ persistent actor Notes {
     Iter.toArray(Iter.filter(Map.values(notes), func(n : Note) : Bool { n.owner == caller }));
   };
 
-  public func whoAmI(session : Text) : async Principal {
-    await* authenticate(session);
+  // Wrapped in a 1-element vec (not a bare Principal) so the client's
+  // decodeVecRecord can read it — same workaround as ledgerSealView, since
+  // this SDK's decoder only knows nat/int/bool/text/principal *inside a
+  // vec record*, not a bare top-level value.
+  public func whoAmI(session : Text) : async [{ principal : Principal }] {
+    [{ principal = await* authenticate(session) }];
   };
 
   // --- Task 3: share & tip ---
@@ -204,16 +208,19 @@ persistent actor Notes {
   // Bonus: a public conservation check — total points in circulation must
   // always equal 100 × the number of accounts that have ever been granted
   // a starting balance, since tips only move points, never mint or burn
-  // them. The frontend footer renders this as a small trust indicator.
+  // them. Named and shaped after Session 6's `ledgerSealView` exactly
+  // (members / circulation / expected / consistent) rather than the
+  // earlier ad-hoc `accounts`/`totalPoints`/`balanced` version.
   // Wrapped in a 1-element vec (not a bare record) so the client's
   // decodeVecRecord can read it — it only knows how to decode `vec record`.
-  public query func ledgerSeal() : async [{ accounts : Nat; totalPoints : Nat; balanced : Bool }] {
-    var total : Nat = 0;
-    var count : Nat = 0;
+  public query func ledgerSealView() : async [{ members : Nat; circulation : Nat; expected : Nat; consistent : Bool }] {
+    var circulation : Nat = 0;
+    var members : Nat = 0;
     for (bal in Map.values(balances)) {
-      total += bal;
-      count += 1;
+      circulation += bal;
+      members += 1;
     };
-    [{ accounts = count; totalPoints = total; balanced = total == count * 100 }];
+    let expected = members * 100;
+    [{ members; circulation; expected; consistent = circulation == expected }];
   };
 };
